@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.example.lottoevent.singletons.FirebaseManager
@@ -58,8 +59,8 @@ class SignUpActivity : ComponentActivity() {
 
             if (firebaseUser == null) {
                 // this shouldnt happen if MainActivity worked
-                Toast.makeText(this@SignUpActivity, "Authentication required. Please restart.", Toast.LENGTH_LONG).show()
                 setLoading(false)
+                Toast.makeText(this@SignUpActivity, "Authentication required. Please restart.", Toast.LENGTH_LONG).show()
                 return@launch
             }
 
@@ -149,6 +150,64 @@ fun SignUpActivityLayout(onFinishSetup: (String, String, (Boolean) -> Unit) -> U
                     )
                 } else {
                     Text("Finish Setup")
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "Sign Up Form Default")
+@Composable
+fun SignUpActivityLayoutPreview() {
+    LottoEventTheme {
+        // Pass a placeholder lambda for the onFinishSetup callback
+        SignUpActivityLayout(onFinishSetup = { _, _, _ ->
+            // In a preview, this logic won't execute, so we leave it empty
+        })
+    }
+}
+
+@Preview(showBackground = true, name = "Sign Up Form Loading")
+@Composable
+fun SignUpActivityLayoutLoadingPreview() {
+    LottoEventTheme {
+        // Use a state to simulate the loading state for the preview
+        var isLoading by remember { mutableStateOf(true) }
+        var name by remember { mutableStateOf("John Doe") }
+        var email by remember { mutableStateOf("john.doe@example.com") }
+
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .padding(32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text("Enter Your Details", style = MaterialTheme.typography.headlineMedium)
+                Spacer(Modifier.height(32.dp))
+
+                OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Name") }, enabled = !isLoading, modifier = Modifier.fillMaxWidth())
+                Spacer(Modifier.height(16.dp))
+
+                OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") }, enabled = !isLoading, modifier = Modifier.fillMaxWidth())
+                Spacer(Modifier.height(32.dp))
+
+                Button(
+                    onClick = { /* No-op in preview */ },
+                    enabled = !isLoading,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 3.dp,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    } else {
+                        Text("Finish Setup")
+                    }
                 }
             }
         }

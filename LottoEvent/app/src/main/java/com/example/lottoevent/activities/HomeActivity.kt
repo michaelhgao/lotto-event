@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.lottoevent.ui.theme.LottoEventTheme
 
@@ -26,9 +27,7 @@ class HomeActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LottoEventTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    HomeActivityLayout(modifier = Modifier.padding(innerPadding));
-                }
+                    HomeActivityLayout();
             }
         }
     }
@@ -78,5 +77,13 @@ fun HomeActivityLayout(modifier: Modifier = Modifier) {
         ) {
             Text("Admin Login")
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeActivityLayoutPreview() {
+    LottoEventTheme {
+        HomeActivityLayout()
     }
 }
