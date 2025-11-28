@@ -5,9 +5,9 @@ data class Event(
 ) {
     var title: String = "";
     var description: String = "";
-    var capacity: Int = 0;
-    lateinit var organizer: User;
-    lateinit var waitingList: WaitingList;
+    var capacity: Int = -1;
+    var organizer: User = User();
+    val waitingList: WaitingList = WaitingList();
 
     constructor(
         id: String,
@@ -15,13 +15,11 @@ data class Event(
         description: String,
         capacity: Int,
         organizer: User,
-        waitingList: WaitingList = WaitingList(),
     ) : this(id) {
         this.title = title
         this.description = description
         this.capacity = capacity
         this.organizer = organizer
-        this.waitingList = waitingList
     }
 
     constructor() : this("")
