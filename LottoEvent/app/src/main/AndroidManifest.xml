@@ -22,6 +22,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.AttendeeActivity">
+
+        </activity>
+        <activity
+            android:name=".activities.OrganizerActivity">
+
+        </activity>
+        <activity
+            android:name=".activities.AdminActivity">
+
+        </activity>
     </application>
 
 </manifest>

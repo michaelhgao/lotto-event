@@ -1,16 +1,23 @@
 package com.example.lottoevent.activities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.lottoevent.ui.theme.LottoEventTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,10 +27,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             LottoEventTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    MainActivityLayout(modifier = Modifier.padding(innerPadding));
                 }
             }
         }
@@ -31,17 +35,50 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
+fun MainActivityLayout(modifier: Modifier = Modifier) {
+    val context = LocalContext.current;
+
+    Column(
         modifier = modifier
-    )
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Button(
+            onClick = {
+                val intent = Intent(context, AttendeeActivity::class.java);
+                context.startActivity(intent);
+            },
+            modifier = Modifier.padding(8.dp),
+        ) {
+            Text("Attend Event")
+        }
+        Button(
+            onClick = {
+                val intent = Intent(context, OrganizerActivity::class.java);
+                context.startActivity(intent);
+            },
+            modifier = Modifier.padding(8.dp),
+        ) {
+            Text("Organize Event")
+        }
+        Button(
+            onClick = {
+                val intent = Intent(context, AdminActivity::class.java);
+                context.startActivity(intent);
+            },
+            modifier = Modifier.padding(8.dp),
+        ) {
+            Text("Admin Login")
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun MainActivityPreview() {
     LottoEventTheme {
-        Greeting("Android")
+        MainActivityLayout()
     }
 }
