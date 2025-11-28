@@ -24,7 +24,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import com.example.lottoevent.models.FirebaseManager
+import com.example.lottoevent.singletons.FirebaseManager
+import com.example.lottoevent.singletons.UserEventStore
 import com.example.lottoevent.ui.theme.LottoEventTheme
 import kotlinx.coroutines.launch
 
@@ -39,18 +40,18 @@ class MainActivity : ComponentActivity() {
         }
 
         if (FirebaseManager.currentUser != null) {
+            // already signed in
             launchHomeActivity();
         }
+
         lifecycleScope.launch {
             val res = FirebaseManager.loginAnonymously();
-
             res.onSuccess {
-                // TODO: set viewmodel
+                UserEventStore.setUser(res.getOrElse { throw IllegalStateException("User is null after authentication") });
                 launchHomeActivity();
             }.onFailure {
                 launchSignUpActivity();
             }
-
         }
     }
 

@@ -34,6 +34,14 @@
             android:name=".activities.AdminActivity">
 
         </activity>
+        <activity
+            android:name=".activities.SignUpActivity">
+
+        </activity>
+        <activity
+            android:name=".activities.HomeActivity">
+
+        </activity>
     </application>
 
 </manifest>
