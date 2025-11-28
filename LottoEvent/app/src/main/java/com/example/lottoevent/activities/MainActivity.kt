@@ -7,9 +7,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
+import com.example.lottoevent.models.FirebaseManager
 import com.example.lottoevent.ui.theme.LottoEventTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,59 +34,58 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LottoEventTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainActivityLayout(modifier = Modifier.padding(innerPadding));
-                }
+                LoadingScreen();
             }
         }
+
+        if (FirebaseManager.currentUser != null) {
+            launchHomeActivity();
+        }
+        lifecycleScope.launch {
+            val res = FirebaseManager.loginAnonymously();
+
+            res.onSuccess {
+                launchHomeActivity();
+            }.onFailure {
+                launchSignUpActivity();
+            }
+
+        }
+    }
+
+    private fun launchHomeActivity() {
+        startActivity(Intent(this, HomeActivity::class.java))
+        finish()
+    }
+
+    private fun launchSignUpActivity() {
+        startActivity(Intent(this, SignUpActivity::class.java))
+        finish()
     }
 }
 
 @Composable
-fun MainActivityLayout(modifier: Modifier = Modifier) {
-    val context = LocalContext.current;
-
+fun LoadingScreen() {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Center
     ) {
-        Button(
-            onClick = {
-                val intent = Intent(context, AttendeeActivity::class.java);
-                context.startActivity(intent);
-            },
-            modifier = Modifier.padding(8.dp),
-        ) {
-            Text("Attend Event")
-        }
-        Button(
-            onClick = {
-                val intent = Intent(context, OrganizerActivity::class.java);
-                context.startActivity(intent);
-            },
-            modifier = Modifier.padding(8.dp),
-        ) {
-            Text("Organize Event")
-        }
-        Button(
-            onClick = {
-                val intent = Intent(context, AdminActivity::class.java);
-                context.startActivity(intent);
-            },
-            modifier = Modifier.padding(8.dp),
-        ) {
-            Text("Admin Login")
-        }
+        CircularProgressIndicator(
+            color = MaterialTheme.colorScheme.primary
+        )
+        Spacer(Modifier.height(16.dp))
+        Text(
+            text = "Checking authentication...",
+            style = MaterialTheme.typography.bodyLarge
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun MainActivityPreview() {
+fun LoadingScreenPreview() {
     LottoEventTheme {
-        MainActivityLayout()
+        LoadingScreen()
     }
 }

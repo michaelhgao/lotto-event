@@ -2,7 +2,7 @@ package com.example.lottoevent.models
 
 data class UserEvent(
     val event: Event? = null,
-    val state: EventState? = EventState.NOT_STARTED,
+    val state: EventState? = EventState.DOES_NOT_EXIST,
 )
 
 data class User(
