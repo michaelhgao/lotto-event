@@ -12,19 +12,39 @@ object FirebaseManager {
     val currentUser: FirebaseUser?
         get() = auth.currentUser
 
-    suspend fun loginAnonymously(): Result<FirebaseUser> {
+    suspend fun loginAnonymously(): Result<User> {
         return try {
             val authResult = auth.signInAnonymously().await()
-            val user = authResult.user
+            val firebaseUser = authResult.user
 
-            if (user != null) {
-                Result.success(user)
+            if (firebaseUser != null) {
+                val fetchRes = fetchUser(firebaseUser.uid)
+                fetchRes
             }
             else {
                 Result.failure(IllegalStateException("User is null after success"))
             }
         }
         catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun fetchUser(uid: String): Result<User> {
+        return try {
+            val snapshot = db.collection("users")
+                .document(uid)
+                .get()
+                .await()
+
+            val user = snapshot.toObject(User::class.java)
+
+            if (user != null) {
+                Result.success(user)
+            } else {
+                Result.failure(NoSuchElementException("User profile not found in Firestore for UID: $uid"))
+            }
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }

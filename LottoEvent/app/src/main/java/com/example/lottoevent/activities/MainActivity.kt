@@ -45,6 +45,7 @@ class MainActivity : ComponentActivity() {
             val res = FirebaseManager.loginAnonymously();
 
             res.onSuccess {
+                // TODO: set viewmodel
                 launchHomeActivity();
             }.onFailure {
                 launchSignUpActivity();

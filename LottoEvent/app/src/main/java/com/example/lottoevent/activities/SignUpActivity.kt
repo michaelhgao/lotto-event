@@ -16,7 +16,7 @@ class SignUpActivity : ComponentActivity() {
             LottoEventTheme {
                 SignUpActivityLayout(
                     onFinishSetup =  { name, email -> {
-                        val newUser = FirebaseManager.
+//                        val newUser = FirebaseManager.
                     }}
                 )
             }
