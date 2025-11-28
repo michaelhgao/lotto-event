@@ -7,5 +7,5 @@ class User(
     var phone: String,
     var events: List<Pair<Event, EventState>> = ArrayList(),
 ) {
-    constructor() : this("", "", "", "", ArrayList())
+    constructor() : this("", "", "", "")
 }

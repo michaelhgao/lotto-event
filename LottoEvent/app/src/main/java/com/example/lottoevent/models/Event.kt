@@ -6,7 +6,7 @@ class Event(
     var description: String,
     var capacity: Int,
     val organizer: User,
-    val waitingList: WaitingList,
+    val waitingList: WaitingList = WaitingList(),
 ) {
-    constructor() : this("", "", "", 0, User(), WaitingList())
+    constructor() : this("", "", "", 0, User())
 }
