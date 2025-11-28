@@ -1,37 +1,39 @@
 package com.example.lottoevent.models
 
+data class WaitingListUser(
+    var user: User? = null,
+    var state: UserState? = UserState.NOT_IN,
+)
+
 class WaitingList(
-    val waitingList: ArrayList<Pair<User, UserState>> = ArrayList(),
+    val waitingList: MutableList<WaitingListUser> = ArrayList(),
     var capacity: Int = -1,
 ) {
-    constructor() : this(ArrayList(), -1)
-
     fun addUser(user: User, state: UserState) {
-        waitingList.add(Pair(user, state));
+        waitingList.add(WaitingListUser(user = user, state = state));
     }
 
     fun removeUser(user: User): Boolean {
-        val e = waitingList.find { it.first == user }
+        val u = waitingList.find { it.user?.id == user.id }
 
-        if (e != null) {
-            return waitingList.remove(e)
+        if (u != null) {
+            return waitingList.remove(u)
         }
-
         return false
     }
 
     fun updateUserState(user: User, newState: UserState): Boolean {
-        val index = waitingList.indexOfFirst { it.first == user }
+        val index = waitingList.indexOfFirst { it.user?.id == user.id }
 
         if (index != -1) {
-            waitingList[index] = user to newState
+            waitingList[index].state = newState
             return true
         }
         return false
     }
 
     fun hasUser(user: User): Boolean {
-        return waitingList.any { it.first == user }
+        return waitingList.any { it.user?.id == user.id }
     }
 
     fun getSize(): Int {
