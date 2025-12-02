@@ -1,6 +1,7 @@
 package com.example.lottoevent.singletons
 
 import android.util.Log
+import com.example.lottoevent.models.Event
 import com.example.lottoevent.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -65,6 +66,23 @@ object FirebaseManager {
             } else {
                 Result.failure(NoSuchElementException("User profile not found in Firestore for UID: $uid"))
             }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun addEvent(event: Event): Result<Unit> {
+        return try {
+            val eventsCollection = db.collection("events");
+            val documentReference = eventsCollection
+                .add(event)
+                .await();
+            if (event.id.isEmpty()) {
+                eventsCollection.document(documentReference.id)
+                    .update("id", documentReference.id)
+                    .await()
+            }
+            Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }

@@ -176,10 +176,10 @@ fun SignUpActivityLayoutLoadingPreview() {
         var name by remember { mutableStateOf("John Doe") }
         var email by remember { mutableStateOf("john.doe@example.com") }
 
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
             Column(
                 modifier = Modifier
-                    .padding(innerPadding)
+                    .padding(paddingValues)
                     .fillMaxSize()
                     .padding(32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
