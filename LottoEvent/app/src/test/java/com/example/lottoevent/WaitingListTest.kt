@@ -1,14 +1,14 @@
 package com.example.lottoevent
 
+import com.example.lottoevent.exceptions.EventFullException
+import com.example.lottoevent.exceptions.UserInWaitingListException
 import com.example.lottoevent.models.User
 import com.example.lottoevent.models.UserState
 import com.example.lottoevent.models.WaitingList
 import org.junit.After
-import org.junit.Assert.assertFalse
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import kotlin.test.junit.JUnitAsserter.assertEquals
-import kotlin.test.junit.JUnitAsserter.assertTrue
 
 class WaitingListTest {
     private val user1 = User("id1", "name1", "email1", "phone1")
@@ -47,8 +47,12 @@ class WaitingListTest {
     @Test
     fun `addUser should not add user already in list`() {
         waitingList.addUser(user1, UserState.ENTERED);
-        waitingList.addUser(user1, UserState.ENTERED);
 
+        assertEquals(1, waitingList.getSize())
+
+        assertThrows(UserInWaitingListException::class.java) {
+            waitingList.addUser(user1, UserState.ENTERED)
+        }
         assertEquals("Waiting list has multiple of the same user", 1, waitingList.getSize())
     }
 
@@ -63,7 +67,9 @@ class WaitingListTest {
         assertTrue("The list should be full before attempting the third addition", waitingList.isFull())
         assertEquals("The capacity does not equal the number of entrants", capacity, waitingList.getSize())
 
-        waitingList.addUser(user3, UserState.ENTERED)
+        assertThrows(EventFullException::class.java) {
+            waitingList.addUser(user3, UserState.ENTERED)
+        }
 
         assertEquals(
             "The waiting list size should remain at the defined capacity ($capacity)",
