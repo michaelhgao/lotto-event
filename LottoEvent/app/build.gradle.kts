@@ -40,6 +40,11 @@ android {
     buildFeatures {
         compose = true
     }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -53,15 +58,28 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
     // Kotlin coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    implementation(libs.kotlinx.coroutines.android)
+    // Unit tests
+    testImplementation(kotlin("test"))
+    testImplementation(libs.androidx.core)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockk)
+    testImplementation(libs.robolectric)
+    // Instrumented tests
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.uiautomator)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+
 }
