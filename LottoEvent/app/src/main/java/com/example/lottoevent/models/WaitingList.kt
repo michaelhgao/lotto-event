@@ -1,5 +1,9 @@
 package com.example.lottoevent.models
 
+import com.example.lottoevent.exceptions.EventFullException
+import com.example.lottoevent.exceptions.UserInWaitingListException
+import com.example.lottoevent.exceptions.UserNotInWaitingListException
+
 data class WaitingListUser(
     var user: User? = null,
     var state: UserState? = UserState.NOT_IN,
@@ -10,26 +14,29 @@ class WaitingList(
     var capacity: Int = -1,
 ) {
     fun addUser(user: User, state: UserState) {
-        waitingList.add(WaitingListUser(user = user, state = state));
+        if (hasUser(user)) {
+            throw UserInWaitingListException("User with ID ${user.id} is already in the waiting list.")
+        }
+        if (isFull()) {
+            throw EventFullException("Cannot add user. The event waiting list has reached its maximum capacity of ${capacity}.")
+        }
+        waitingList.add(WaitingListUser(user = user, state = state))
     }
 
-    fun removeUser(user: User): Boolean {
+    fun removeUser(user: User) {
         val u = waitingList.find { it.user?.id == user.id }
-
-        if (u != null) {
-            return waitingList.remove(u)
+        if (u == null) {
+            throw UserNotInWaitingListException("User with ID ${user.id} is not in the waiting list.")
         }
-        return false
+        waitingList.remove(u)
     }
 
-    fun updateUserState(user: User, newState: UserState): Boolean {
+    fun updateUserState(user: User, newState: UserState) {
         val index = waitingList.indexOfFirst { it.user?.id == user.id }
-
-        if (index != -1) {
-            waitingList[index].state = newState
-            return true
+        if (index == -1) {
+            throw UserNotInWaitingListException("User with ID ${user.id} is not in the waiting list.")
         }
-        return false
+        waitingList[index].state = newState
     }
 
     fun hasUser(user: User): Boolean {
